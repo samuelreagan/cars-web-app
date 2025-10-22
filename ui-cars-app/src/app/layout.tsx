@@ -29,8 +29,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <header className="p-4 font-semibold">
-          <Link href="/">Car Management System</Link></header>
-        <main className="p-4">{children}</main>
+          <Link href="/">Car Management System</Link>
+        </header>
+        <main className="px-4 py-6">{children}</main>
         {/* <footer>&copy; {new Date().getFullYear()}</footer> */}
       </body>
     </html>
