@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
 
-export default function CarDetails({ params }: { params: Promise<{ id: string }>}) {
+export default function CarUpdate({ params }: { params: Promise<{ id: string }>}) {
   const [data, setData] = useState<{make: string, model: string, year: string } | null>(null)
   const { id } = use(params);
   const router = useRouter();
@@ -30,10 +30,19 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
     fetchData();
   }, [id]);
 
-  function handleUpdate() {
-    // Handle update logic here
-    console.log('Update');
-    router.push(`/cars/update/${id}`);
+  async function handleSave() {
+        // Handle delete logic here
+    console.log('Save');
+    const response = await fetch(`/api/v1/cars/${id}`, {
+      method: 'PUT',
+    });
+
+    if (!response.ok) {
+      console.error('Failed to save the car');
+      return;
+    }
+
+    router.push('/');
 
   }
 
@@ -72,7 +81,7 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
           </dl>
         </CardContent>
         <CardActions>
-            <Button size="small" variant='contained' onClick={handleUpdate}>Update</Button>
+            <Button size="small" variant='contained' onClick={handleSave}>Save</Button>
             <Button size="small" color='error' variant='contained' onClick={handleDelete}>Delete</Button>
         </CardActions>
     </Card>

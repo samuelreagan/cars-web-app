@@ -1,18 +1,9 @@
+import { mockedCars } from "@/app/api/data/data";
 import { NextRequest } from "next/server";
 
-
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: number }> }) {
-  const id = (await params).id;
-  console.log(id);
-
-  const car = {
-    id: 3,
-    make: 'Dodge',
-    model: 'Ram',
-    year: 2005,
-    features: ['Extra Large Bed']
-  };
-
+  const id = +(await params).id;
+  const car = mockedCars.find(car => car.id === id);
 
   return new Response(JSON.stringify(car), {
     status: 200,
@@ -22,9 +13,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: number }> }) {
   const id = (await params).id;
-  const body = await request.json();
+  // const body = await request.json();
 
-  return new Response(JSON.stringify({ id, ...body }), {
+  return new Response(JSON.stringify('OK'), {
     status: 200,
     headers: { 'Content-Type': 'application/json' }
   });
