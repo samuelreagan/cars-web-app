@@ -6,11 +6,25 @@ import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
 import CarForm from '@/app/components/shared-components';
 import { Car } from '@/app/types/car';
+import { Skeleton } from '@mui/material';
 
 export default function CarUpdate({ params }: { params: Promise<{ id: string }>}) {
   const [data, setData] = useState<Car | null>(null)
+  const [loading, setLoading] = useState<boolean>(true);
   const { id } = use(params);
   const router = useRouter();
+
+  function getSkeleton() {
+    return (
+      <div>
+        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+      </div>
+    )
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -22,6 +36,7 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
         const result = await response.json();
         console.log(result);
         setData(result);
+        setLoading(false);
       } catch (err) {
         // setError(err);
       } finally {
@@ -70,7 +85,9 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
   return (
     <Card>
       <CardContent>
-        <CarForm formType='update' onSubmit={onUpdate} onCancel={onCancel} onDelete={onDelete} defaultData={data}></CarForm>
+        { loading
+          ? getSkeleton()
+          : <CarForm formType='update' onSubmit={onUpdate} onCancel={onCancel} onDelete={onDelete} defaultData={data}></CarForm>}
       </CardContent>
     </Card>
   )
