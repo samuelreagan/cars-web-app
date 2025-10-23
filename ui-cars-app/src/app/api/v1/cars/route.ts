@@ -17,7 +17,16 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json(); 
-  // Insert new car into your DB
+
+  console.log('Creating car:', body);
+
+  if (!body.make || !body.model || !body.year) {
+    return new Response(JSON.stringify({ error: 'Missing required fields' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  // Insert car
  
   return new Response(JSON.stringify(body), {
     status: 201,
