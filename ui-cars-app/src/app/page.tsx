@@ -70,7 +70,6 @@ export default function EnhancedTable() {
 
 
   const handleRowClick = (row: GridRowParams<Car>, event: React.MouseEvent<unknown>) => {
-    console.log('Row clicked:', row);
     event.preventDefault();
     router.push(`/cars/details/${row.id}`);
   };
