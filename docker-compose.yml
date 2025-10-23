@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-U", "sam_test", "-d", "carsdb"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_DB: carsdb
+      POSTGRES_USER: sam_test
+      POSTGRES_PASSWORD: testpw_notsecure
+    ports:
+      - '5432:5432'
+ 
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

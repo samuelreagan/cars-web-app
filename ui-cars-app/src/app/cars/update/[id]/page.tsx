@@ -46,11 +46,25 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
     fetchData();
   }, [id]);
 
-  async function onUpdate() {
-        // Handle delete logic here
-    console.log('Save');
+  async function onUpdate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+
+    const make = (data.get('make') as string) ?? '';
+    const model = (data.get('model') as string) ?? '';
+    const year = Number((data.get('year') as string) ?? '');
+    const featuresRaw = (data.get('features') as string) ?? '';
+    const features = featuresRaw.split(',').map(s => s.trim()).filter(Boolean);
+
+    console.log({ make, model, year, features });
+  
     const response = await fetch(`/api/v1/cars/${id}`, {
       method: 'PUT',
+      body: JSON.stringify({ make, model, year, features }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
     });
 
     if (!response.ok) {
@@ -58,7 +72,7 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
       return;
     }
 
-    router.push('/');
+    router.push(`/cars/details/${id}`);
 
   }
 

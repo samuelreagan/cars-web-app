@@ -7,7 +7,8 @@ import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
 
 export default function CarDetails({ params }: { params: Promise<{ id: string }>}) {
-  const [data, setData] = useState<{make: string, model: string, year: string, features: string[] } | null>(null)
+  const [data, setData] = useState<{make: string, model: string, year: string, features: string[] } | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const { id } = use(params);
   const router = useRouter();
 
@@ -21,6 +22,7 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
         const result = await response.json();
         console.log(result);
         setData(result);
+        setLoading(false);
       } catch (err) {
         // setError(err);
       } finally {
@@ -62,7 +64,8 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
           >
             Car Details
           </Typography>
-          <dl>
+          { loading ? 'Loading...' : 
+          <article>
             <Typography component="dt" variant="subtitle1">Make:</Typography>
             <Typography component="dd" variant="body1" gutterBottom>{ data?.make }</Typography>
             <Typography component="dt" variant="subtitle1">Model:</Typography>
@@ -70,8 +73,9 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
             <Typography component="dt" variant="subtitle1">Year:</Typography>
             <Typography component="dd" variant="body1" gutterBottom>{ data?.year }</Typography>
             <Typography component="dt" variant="subtitle1">Features:</Typography>
-            <Typography component="dd" variant="body1" gutterBottom>{ data?.features.join(', ') }</Typography>
-          </dl>
+            <Typography component="dd" variant="body1" gutterBottom>{ data?.features?.join(', ') }</Typography>
+          </article>
+    }
         </CardContent>
         <CardActions>
             <Button size="small" variant='contained' onClick={handleUpdate} sx={{ background: "var(--eko-purple)" }}>Update</Button>

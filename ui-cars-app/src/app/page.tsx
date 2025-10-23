@@ -39,7 +39,7 @@ const columns: GridColDef<Car>[] = [
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     flex: 1,
-    valueGetter: (value, row) => (row.features).join(', '),
+    valueGetter: (value, row) => row.features?.length ? (row.features).join(', ') : 'None',
   }
 ];
 
