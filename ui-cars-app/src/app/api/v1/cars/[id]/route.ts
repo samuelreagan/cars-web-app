@@ -1,7 +1,7 @@
 import { mockedCars } from "@/app/api/data/data";
 import { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: number }> }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const id = +(await params).id;
   const car = mockedCars.find(car => car.id === id);
 
@@ -11,8 +11,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   });
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: number }> }) {
-  const id = (await params).id;
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id = +(await params).id;
   // const body = await request.json();
 
   return new Response(JSON.stringify('OK'), {
@@ -21,8 +21,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: number }> }) {
-  const id = (await params).id;
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id = +(await params).id;
 
   if (isNaN(id)) {
     return new Response('ID is required', {

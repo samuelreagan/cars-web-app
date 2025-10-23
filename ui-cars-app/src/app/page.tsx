@@ -4,35 +4,12 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { useEffect } from 'react';
 import { Button } from '@mui/material';
+import { Car } from './types/car';
 
-interface Data {
-  id: number;
-  make: string;
-  model: string;
-  year: number;
-  features: string;
-}
-
-function createData(
-  id: number,
-  make: string,
-  model: string,
-  year: number,
-  features: string[]
-): Data {
-  return {
-    id,
-    make,
-    model,
-    year,
-    features: features.join(', ')
-  };
-}
-
-const columns: GridColDef<(typeof any)[number]>[] = [
+const columns: GridColDef<Car>[] = [
   {
     field: 'id',
     headerName: 'ID',
@@ -62,13 +39,13 @@ const columns: GridColDef<(typeof any)[number]>[] = [
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     flex: 1,
-    // valueGetter: (valu, row) => (row.features).join(', '),
+    valueGetter: (value, row) => (row.features).join(', '),
   }
 ];
 
 export default function EnhancedTable() {
   const router = useRouter();
-  const [rows, setData] = React.useState<Data[]>([]);
+  const [rows, setData] = React.useState<Car[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
@@ -92,7 +69,8 @@ export default function EnhancedTable() {
   }, []);
 
 
-  const handleRowClick = (row, event: React.MouseEvent<unknown>) => {
+  const handleRowClick = (row: GridRowParams<Car>, event: React.MouseEvent<unknown>) => {
+    console.log('Row clicked:', row);
     event.preventDefault();
     router.push(`/cars/details/${row.id}`);
   };
