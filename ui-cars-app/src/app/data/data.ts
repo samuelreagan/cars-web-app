@@ -4,7 +4,6 @@ import { Car } from '../types/car';
 // Initialize the Postgres client
 const sql = postgres(process.env.POSTGRES_URL!);
 
-
 /**
  * Function for testing purposes to seed the database.
  * This would not be used in production code.
@@ -47,13 +46,13 @@ export async function seedDatabase() {
 }
 
 export async function getCars() {
-  const cars = await sql`SELECT * FROM cars`;
+  const cars = await sql`SELECT * FROM cars ORDER BY id ASC`;
   return cars;
 }
 
 export async function getCarById(id: number) {
   const car = await sql`SELECT * FROM cars WHERE id = ${id}`;
-  return car;
+  return car[0] || null;
 }
 
 export async function deleteCarById(id: number) {
