@@ -50,6 +50,20 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
     router.push('/');
   }
 
+  function getFeatureList(features: string[]) {
+    if (features.length === 0) {
+      return '';
+    }
+
+    return (
+      <ul className="list-disc pl-5">
+        {features.map((feature, index) => (
+          <li key={index}>{feature}</li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
     <Card>
         <CardContent>
@@ -65,12 +79,8 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
             <p className="mb-2"><b>Make</b>: { data?.make }</p>
             <p className="mb-2"><b>Model</b>: { data?.model }</p>
             <p className="mb-2"><b>Year</b>: { data?.year }</p>
-            <p className="mb-2"><b>Features</b></p>
-            <ul className="list-disc pl-5">
-              { data?.features?.map((feature, index) => (
-                <li key={index}>{ feature }</li>
-              )) }
-            </ul>
+            <p className="mb-2"><b>Features</b>{ !data?.features.length ? ': None' : '' }</p>
+            { getFeatureList(data?.features || []) }
           </Typography>
         }
         </CardContent>
