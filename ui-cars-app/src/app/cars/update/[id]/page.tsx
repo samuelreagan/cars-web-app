@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use, useContext } from 'react';
+import { useState, useEffect, use, useContext, useRef } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
@@ -15,26 +15,31 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
   const router = useRouter();
   const messageContext = useContext(MessageContext);
 
+  // Fixes issue w/ looping useEffect due to changing context value (thanks copilot)
+  // Ideally handle this in a better way
+  const showMessageRef = useRef(messageContext.showMessage);
+  useEffect(() => { showMessageRef.current = messageContext.showMessage; }, [messageContext.showMessage]);
+
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await fetch(`/api/v1/cars/${id}`);
         if (!response.ok) {
-          messageContext.showMessage({ severity: 'error', message: 'Unable to fetch the car data' });
+          showMessageRef.current?.({ severity: 'error', message: 'Unable to fetch the car data' });
           router.push(`/`);
         } else {
           const result = await response.json();
           setData(result);
         }
       } catch (err) {
-        messageContext.showMessage({ severity: 'error', message: 'Error loading car data' });
+        showMessageRef.current?.({ severity: 'error', message: 'Error loading car data' });
         router.push(`/`);
       } finally {
         setLoading(false);
       }
     }
     fetchData();
-  }, [id, messageContext, router]);
+  }, [id, router]);
 
   async function onUpdate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

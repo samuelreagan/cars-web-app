@@ -8,6 +8,7 @@ import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { useEffect } from 'react';
 import { Button } from '@mui/material';
 import { Car } from './types/car';
+import { MessageContext } from './context/MessageContext';
 
 const columns: GridColDef<Car>[] = [
   {
@@ -50,6 +51,12 @@ export default function EnhancedTable() {
   const router = useRouter();
   const [rows, setData] = React.useState<Car[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const messageContext = React.useContext(MessageContext);
+
+  // Fixes issue w/ looping useEffect due to changing context value (thanks copilot)
+  // Ideally handle this in a better way
+  const showMessageRef = React.useRef(messageContext.showMessage);
+  React.useEffect(() => { showMessageRef.current = messageContext.showMessage; }, [messageContext.showMessage]);
 
   useEffect(() => {
       async function fetchData() {
@@ -57,14 +64,15 @@ export default function EnhancedTable() {
         const response = await fetch(`/api/v1/cars`);
         setLoading(false);
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          showMessageRef.current?.({ severity: 'error', message: 'Unable to load car data' });
+        } else {
+          const result = await response.json();
+          setData(result);
         }
-        const result = await response.json();
-        setData(result);
       } catch (err) {
-        // setError(err);
+        showMessageRef.current?.({ severity: 'error', message: 'Error loading car data' });
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     }
     fetchData();
