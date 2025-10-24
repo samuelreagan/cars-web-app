@@ -6,7 +6,7 @@ export default function CarsLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Box sx={{ width: '50%', margin: '0 auto' }}>
+    <Box sx={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
         {children}
     </Box>
   );

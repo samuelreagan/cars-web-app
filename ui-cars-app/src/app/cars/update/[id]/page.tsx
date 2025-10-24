@@ -4,27 +4,14 @@ import { useState, useEffect, use } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
-import CarForm from '@/app/components/shared-components';
+import { CarForm } from '@/app/components/shared-components';
 import { Car } from '@/app/types/car';
-import { Skeleton } from '@mui/material';
 
 export default function CarUpdate({ params }: { params: Promise<{ id: string }>}) {
   const [data, setData] = useState<Car | null>(null)
   const [loading, setLoading] = useState<boolean>(true);
   const { id } = use(params);
   const router = useRouter();
-
-  function getSkeleton() {
-    return (
-      <div>
-        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
-        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
-        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
-        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
-        <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
-      </div>
-    )
-  }
 
   useEffect(() => {
     async function fetchData() {
@@ -56,8 +43,6 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
     const year = Number((data.get('year') as string) ?? '');
     const featuresRaw = (data.get('features') as string) ?? '';
     const features = featuresRaw.split(',').map(s => s.trim()).filter(Boolean);
-
-    console.log({ make, model, year, features });
   
     const response = await fetch(`/api/v1/cars/${id}`, {
       method: 'PUT',
@@ -77,8 +62,6 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
   }
 
   async function onDelete() {
-    // Handle delete logic here
-    console.log('Delete');
     const response = await fetch(`/api/v1/cars/${id}`, {
       method: 'DELETE',
     });
@@ -99,9 +82,7 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
   return (
     <Card>
       <CardContent>
-        { loading
-          ? getSkeleton()
-          : <CarForm formType='update' onSubmit={onUpdate} onCancel={onCancel} onDelete={onDelete} defaultData={data}></CarForm>}
+        <CarForm formType='update' loading={loading} onSubmit={onUpdate} onCancel={onCancel} onDelete={onDelete} defaultData={data}></CarForm>
       </CardContent>
     </Card>
   )

@@ -5,6 +5,7 @@ import { Button, CardActions, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
+import { SkeletonForm } from '@/app/components/shared-components';
 
 export default function CarDetails({ params }: { params: Promise<{ id: string }>}) {
   const [data, setData] = useState<{make: string, model: string, year: string, features: string[] } | null>(null);
@@ -33,15 +34,10 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
   }, [id]);
 
   function handleUpdate() {
-    // Handle update logic here
-    console.log('Update');
     router.push(`/cars/update/${id}`);
-
   }
 
   async function handleDelete() {
-    // Handle delete logic here
-    console.log('Delete');
     const response = await fetch(`/api/v1/cars/${id}`, {
       method: 'DELETE',
     });
@@ -64,18 +60,19 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
           >
             Car Details
           </Typography>
-          { loading ? 'Loading...' : 
-          <article>
-            <Typography component="dt" variant="subtitle1">Make:</Typography>
-            <Typography component="dd" variant="body1" gutterBottom>{ data?.make }</Typography>
-            <Typography component="dt" variant="subtitle1">Model:</Typography>
-            <Typography component="dd" variant="body1" gutterBottom>{ data?.model }</Typography>
-            <Typography component="dt" variant="subtitle1">Year:</Typography>
-            <Typography component="dd" variant="body1" gutterBottom>{ data?.year }</Typography>
-            <Typography component="dt" variant="subtitle1">Features:</Typography>
-            <Typography component="dd" variant="body1" gutterBottom>{ data?.features?.join(', ') }</Typography>
-          </article>
-    }
+          { loading ? <SkeletonForm></SkeletonForm> : 
+          <Typography component="article" variant="body1" fontSize={18}>
+            <p className="mb-2"><b>Make</b>: { data?.make }</p>
+            <p className="mb-2"><b>Model</b>: { data?.model }</p>
+            <p className="mb-2"><b>Year</b>: { data?.year }</p>
+            <p className="mb-2"><b>Features</b></p>
+            <ul className="list-disc pl-5">
+              { data?.features?.map((feature, index) => (
+                <li key={index}>{ feature }</li>
+              )) }
+            </ul>
+          </Typography>
+        }
         </CardContent>
         <CardActions>
             <Button size="small" variant='contained' onClick={handleUpdate} sx={{ background: "var(--eko-purple)" }}>Update</Button>

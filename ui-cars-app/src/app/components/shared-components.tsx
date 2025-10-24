@@ -1,14 +1,17 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, Skeleton, TextField, Typography } from "@mui/material";
+
 import { Car } from "../types/car";
 
-export default function CarForm({
+export function CarForm({
   formType,
+  loading = false,
   onSubmit,
   onCancel,
   onDelete,
   defaultData
 }: {
   formType: 'update' | 'add';
+  loading?: boolean;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onCancel: () => void;
   onDelete?: () => void;
@@ -29,13 +32,30 @@ export default function CarForm({
       >
       {formHeader}
       </Typography>
-      <TextField id="outlined-basic" label={hasData ? '' : 'Make'} name="make" variant="outlined" required fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData?.make ?? ''}/>
-      <TextField id="outlined-basic" label={hasData ? '' : 'Model'} name="model" variant="outlined" required fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData?.model ?? ''}/>
-      <TextField id="outlined-basic" label={hasData ? '' : 'Year'} name="year" variant="outlined" required fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData?.year ?? ''}/>
-      <TextField id="outlined-basic" label={hasData ? '' : 'Features'} name="features" variant="outlined" fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData ? defaultData.features.join(', ') : ''}/>
-      <Button size="small" variant='contained' sx={{ background: "var(--eko-purple)", marginRight: 2 }} type='submit'>{submitButtonLabel}</Button>
-      {deleteButton}
-      <Button size="small" variant='contained' sx={{ background: "var(--foreground)", marginRight: 2 }} onClick={onCancel}>Cancel</Button>
+      { loading
+        ? <SkeletonForm></SkeletonForm>
+        : <div>
+            <TextField id="outlined-basic" label={hasData ? '' : 'Make'} name="make" variant="outlined" required fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData?.make ?? ''}/>
+            <TextField id="outlined-basic" label={hasData ? '' : 'Model'} name="model" variant="outlined" required fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData?.model ?? ''}/>
+            <TextField id="outlined-basic" label={hasData ? '' : 'Year'} name="year" variant="outlined" required fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData?.year ?? ''}/>
+            <TextField id="outlined-basic" label={hasData ? '' : 'Features'} name="features" variant="outlined" fullWidth={true} sx={{ marginBottom: 2 }} defaultValue={defaultData ? defaultData.features.join(', ') : ''}/>
+            <Button size="small" variant='contained' sx={{ background: "var(--eko-purple)", marginRight: 2 }} type='submit'>{submitButtonLabel}</Button>
+            {deleteButton}
+            <Button size="small" variant='contained' sx={{ background: "var(--foreground)", marginRight: 2 }} onClick={onCancel}>Cancel</Button>
+          </div>
+      }
     </form>
   )
+}
+
+export function SkeletonForm() {
+  return (
+    <article>
+      <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+      <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+      <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+      <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+      <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
+    </article>
+  );
 }

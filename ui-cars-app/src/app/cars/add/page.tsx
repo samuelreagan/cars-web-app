@@ -1,6 +1,6 @@
 'use client';
-
-import CarForm from '@/app/components/shared-components';
+ 
+import { CarForm } from '@/app/components/shared-components';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
