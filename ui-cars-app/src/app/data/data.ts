@@ -51,11 +51,15 @@ export async function getCars() {
 }
 
 export async function getCarById(id: number) {
+  verifyId(id);
+
   const car = await sql`SELECT * FROM cars WHERE id = ${id}`;
   return car[0] || null;
 }
 
 export async function deleteCarById(id: number) {
+  verifyId(id);
+
   const result = await sql`DELETE FROM cars WHERE id = ${id}`;
   return result;
 }
@@ -70,6 +74,8 @@ export async function createCar(car: { make: string; model: string; year: number
 }
 
 export async function updateCarById(id: number, car: Car) {
+  verifyId(id);
+
   const result = await sql`
     UPDATE cars
     SET make = ${car.make},
@@ -79,4 +85,10 @@ export async function updateCarById(id: number, car: Car) {
     WHERE id = ${id}`;
 
   return result;
+}
+
+function verifyId(id: number) {
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new Error('Invalid id');
+  }
 }
