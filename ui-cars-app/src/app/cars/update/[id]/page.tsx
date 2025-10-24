@@ -101,7 +101,7 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
   }
 
   function onCancel() {
-    router.push('/');
+    router.push(`/cars/details/${id}`);
   }
 
   return (

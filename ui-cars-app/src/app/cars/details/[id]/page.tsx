@@ -41,11 +41,15 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
     fetchData();
   }, [id, router]);
 
-  function handleUpdate() {
+  function onUpdate() {
     router.push(`/cars/update/${id}`);
   }
 
-  async function handleDelete() {
+  function onGoBack() {
+    router.push(`/`);
+  }
+
+  async function onDelete() {
     let response;
     try {
       response = await fetch(`/api/v1/cars/${id}`, {
@@ -100,8 +104,9 @@ export default function CarDetails({ params }: { params: Promise<{ id: string }>
         }
         </CardContent>
         <CardActions>
-            <Button size="small" variant='contained' onClick={handleUpdate} sx={{ background: "var(--eko-purple)" }}>Update</Button>
-            <Button size="small" color='error' variant='contained' onClick={handleDelete}>Delete</Button>
+            <Button size="small" variant='contained' onClick={onUpdate} sx={{ background: "var(--eko-purple)" }}>Update</Button>
+            <Button size="small" color='error' variant='contained' onClick={onDelete}>Delete</Button>
+            <Button size="small" color='error' variant='contained' sx={{ background: "var(--foreground)" }} onClick={onGoBack}>Go Back</Button>
         </CardActions>
     </Card>
   )
