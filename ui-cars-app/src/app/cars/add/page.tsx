@@ -12,7 +12,6 @@ export default function AddCar() {
   const messageContext = useContext(MessageContext);
 
   function handleCancel() {
-    console.log('Cancel');
     router.push('/');
   }
 

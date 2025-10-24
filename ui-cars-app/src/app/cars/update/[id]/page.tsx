@@ -96,7 +96,6 @@ export default function CarUpdate({ params }: { params: Promise<{ id: string }>}
   }
 
   function onCancel() {
-    console.log('Cancel');
     router.push('/');
   }
 
