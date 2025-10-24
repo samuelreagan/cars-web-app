@@ -13,18 +13,21 @@ const columns: GridColDef<Car>[] = [
   {
     field: 'id',
     headerName: 'ID',
-    flex: 0
+    flex: 0,
+    width: 90
   },
   {
     field: 'make',
     headerName: 'Make',
     flex: 0,
+    width: 200,
     editable: false,
   },
   {
     field: 'model',
     headerName: 'Model',
     flex: 0,
+    width: 200,
     editable: false,
   },
   {

@@ -21,8 +21,9 @@ export default function RootLayout({
             <Link href="/">Car Management System</Link>
           </Typography>
         </header>
-        <main className="px-4 py-6">{children}</main>
-        {/* <footer>&copy; {new Date().getFullYear()}</footer> */}
+        <main className="px-4 py-6">
+          {children}
+        </main>
       </body>
     </html>
   );

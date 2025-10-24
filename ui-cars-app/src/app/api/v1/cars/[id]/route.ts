@@ -5,7 +5,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const id = +(await params).id;
   const car = await getCarById(id);
 
-  return new Response(JSON.stringify(car[0]), {
+  return new Response(JSON.stringify(car), {
     status: 200,
     headers: { 'Content-Type': 'application/json' }
   });
