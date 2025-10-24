@@ -59,7 +59,7 @@ A car can be deleted from the add car form or the update car form by clicking th
 - Move sorting, filtering, and searching to the backend. Currently doing these actions on the frontend works, but this can quickly become inefficient with large sets of data. We'd may even want to use a search optimized database such as Elasticsearch. The decision to keep these actions on the frontend was made due to time constraints.
 - Add a confirmation dialog prior to the user deleting a car.
 - Enable updating and deleting from the table.
-- Clean up duplicated code and ensure the code follow best practices for React/Next.js.
+- Clean up duplicated/unecessary code and ensure the code follow best practices for React/Next.js.
 - Instead of having make, model, year, and features as free-form inputs,  pull these values from an existing vehicle API. Alternatively, we could create our own DB tables and API for this purpose though that would be burdensome. Either way, this will help keep the integrity of our data and ensure we don't have made up cars (i.e. 1980 Telsa Tacoma).
 - The list goes on...
 
