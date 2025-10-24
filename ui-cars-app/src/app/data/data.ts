@@ -65,9 +65,10 @@ export async function deleteCarById(id: number) {
 }
 
 export async function createCar(car: { make: string; model: string; year: number; features: string[] }) {
+  const sanitizedCarInput = sanitizeCarInput(car);
   const result = await sql`
     INSERT INTO cars (make, model, year, features)
-    VALUES (${car.make}, ${car.model}, ${car.year}, ${sql.array(car.features)})
+    VALUES (${sanitizedCarInput.make}, ${sanitizedCarInput.model}, ${sanitizedCarInput.year}, ${sql.array(sanitizedCarInput.features)})
   `;
 
   return result;
@@ -75,13 +76,14 @@ export async function createCar(car: { make: string; model: string; year: number
 
 export async function updateCarById(id: number, car: Car) {
   verifyId(id);
+  const sanitizedCarInput = sanitizeCarInput(car);
 
   const result = await sql`
     UPDATE cars
-    SET make = ${car.make},
-        model = ${car.model},
-        year = ${car.year},
-        features = ${sql.array(car.features)}
+    SET make = ${sanitizedCarInput.make},
+        model = ${sanitizedCarInput.model},
+        year = ${sanitizedCarInput.year},
+        features = ${sql.array(sanitizedCarInput.features)}
     WHERE id = ${id}`;
 
   return result;
@@ -91,4 +93,28 @@ function verifyId(id: number) {
   if (!Number.isInteger(id) || id <= 0) {
     throw new Error('Invalid id');
   }
+}
+
+function sanitizeCarInput(input: {
+  make?: string;
+  model?: string;
+  year?: number;
+  features?: string[] | string;
+}) {
+  const make = String(input.make ?? '').trim().slice(0, 200);
+  const model = String(input.model ?? '').trim().slice(0, 200);
+
+  const yearNum = Number(input.year);
+  if (!Number.isInteger(yearNum)) {
+    throw new Error('Invalid year');
+  }
+
+  let features: string[] = [];
+  if (Array.isArray(input.features)) {
+    features = input.features.map(feature => String(feature).trim()).filter(Boolean).map(feature => feature.slice(0, 200));
+  } else {
+    features = [];
+  }
+
+  return { make, model, year: yearNum, features };
 }
