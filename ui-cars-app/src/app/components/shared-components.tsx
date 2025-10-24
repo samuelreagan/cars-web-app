@@ -1,6 +1,7 @@
-import { Button, Skeleton, TextField, Typography } from "@mui/material";
+import { Alert, Button, Skeleton, TextField, Typography } from "@mui/material";
 
 import { Car } from "../types/car";
+import { MessageData } from "../context/MessageContext";
 
 export function CarForm({
   formType,
@@ -58,4 +59,14 @@ export function SkeletonForm() {
       <Skeleton variant="rectangular" height={50} sx={{ marginBottom: 2 }} />
     </article>
   );
+}
+
+export function AppAlert({ messageData, onCloseHandler } : { messageData: MessageData | null, onCloseHandler?: () => void }) {
+  return (
+    messageData?.message && messageData.severity
+    ? <Alert severity={messageData.severity} sx={{ marginBottom: 3 }} onClose={onCloseHandler}>
+        { messageData.message }
+      </Alert>
+    : null
+  )
 }

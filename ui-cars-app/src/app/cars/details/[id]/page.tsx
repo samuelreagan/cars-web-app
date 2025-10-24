@@ -1,52 +1,62 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useContext } from 'react';
 import { Button, CardActions, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useRouter } from 'next/navigation';
 import { SkeletonForm } from '@/app/components/shared-components';
+import { MessageContext } from '@/app/context/MessageContext';
 
 export default function CarDetails({ params }: { params: Promise<{ id: string }>}) {
   const [data, setData] = useState<{make: string, model: string, year: string, features: string[] } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { id } = use(params);
   const router = useRouter();
+  const messageContext = useContext(MessageContext);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await fetch(`/api/v1/cars/${id}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          messageContext.showMessage({ severity: 'error', message: 'Unable to fetch the car data' });
+          router.push(`/`);
+        } else {
+          const result = await response.json();
+          setData(result);
         }
-        const result = await response.json();
-        console.log(result);
-        setData(result);
-        setLoading(false);
       } catch (err) {
-        // setError(err);
+        messageContext.showMessage({ severity: 'error', message: 'Error loading car data' });
+        router.push(`/`);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     }
     fetchData();
-  }, [id]);
+  }, [id, messageContext, router]);
 
   function handleUpdate() {
     router.push(`/cars/update/${id}`);
   }
 
   async function handleDelete() {
-    const response = await fetch(`/api/v1/cars/${id}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      console.error('Failed to delete the car');
+    let response;
+    try {
+      response = await fetch(`/api/v1/cars/${id}`, {
+        method: 'DELETE',
+      });
+    } catch (err) {
+      messageContext.showMessage({ severity: 'error', message: 'Error deleting car' });
       return;
     }
 
+    if (!response?.ok) {
+      messageContext.showMessage({ severity: 'error', message: 'Unable to delete the car' });
+      return;
+    }
+
+    messageContext.showMessage({ severity: 'success', message: 'Car deleted successfully!' });
     router.push('/');
   }
 
