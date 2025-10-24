@@ -39,9 +39,9 @@ export async function seedDatabase() {
 
   for (const car of mockedCars) {
     await sql`
-            INSERT INTO cars (make, model, year, features)
-            VALUES (${car.make}, ${car.model}, ${car.year}, ${sql.array(car.features)})
-        `;
+      INSERT INTO cars (make, model, year, features)
+      VALUES (${car.make}, ${car.model}, ${car.year}, ${sql.array(car.features)})
+    `;
   }
 }
 
@@ -62,26 +62,21 @@ export async function deleteCarById(id: number) {
 
 export async function createCar(car: { make: string; model: string; year: number; features: string[] }) {
   const result = await sql`
-        INSERT INTO cars (make, model, year, features)
-        VALUES (${car.make}, ${car.model}, ${car.year}, ${sql.array(car.features)})
-    `;
+    INSERT INTO cars (make, model, year, features)
+    VALUES (${car.make}, ${car.model}, ${car.year}, ${sql.array(car.features)})
+  `;
 
   return result;
 }
 
 export async function updateCarById(id: number, car: Car) {
-    const fields = Object.keys(car);
-    if (fields.length === 0) {
-      throw new Error('No fields to update');
-    }
+  const result = await sql`
+    UPDATE cars
+    SET make = ${car.make},
+        model = ${car.model},
+        year = ${car.year},
+        features = ${sql.array(car.features)}
+    WHERE id = ${id}`;
 
-    const result = await sql`
-      UPDATE cars
-      SET make = ${car.make},
-          model = ${car.model},
-          year = ${car.year},
-          features = ${sql.array(car.features)}
-      WHERE id = ${id}`;
-
-    return result;
+  return result;
 }
